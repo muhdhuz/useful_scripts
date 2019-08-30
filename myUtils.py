@@ -145,3 +145,34 @@ def extract_nsynth_volume(filename):
 
 #audio transforms
 #*************************************
+def MinMaxScaling(input,min,max,a=-1,b=1):
+	"""rescales input array from [min,max] -> [a,b]"""
+	output = a + (input-min)*(b-a)/(max-min)
+	return output
+
+def ScaleAudio(file,outdir,scaling_function,*args,**kwargs):
+	import soundfile as sf
+	"""loads file, applies scaling_function, saves file in specified directory
+	file: path to file
+	outdir: path to directory where scaled file will be saved"""
+	y,samplerate = sf.read(file)
+	scaled_y = scaling_function(y,*args,**kwargs)
+	try:
+		os.stat(outdir) # test for existence
+	except:
+		os.mkdir(outdir) # create if necessary   
+	basename = os.path.basename(file)
+	return sf.write(outdir + '/' + basename, scaled_y, samplerate)
+
+def ScaleAudio_all(indir,outdir,scaling_function,*args,**kwargs):
+	"""Wraps ScaleAudio to run on all files in indir.
+	Outdir preserves folder structure of indir"""
+	for dirpath, _, filenames in os.walk(indir):
+		if filenames:
+			for name in filenames:
+				structure = os.path.join(outdir, os.path.relpath(dirpath, indir))
+				if not os.path.isdir(structure):
+					os.mkdir(structure)
+				ScaleAudio(os.path.join(dirpath, name),structure,scaling_function,*args,**kwargs)
+
+
