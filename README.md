@@ -5,8 +5,8 @@ Developed on Python 3, mostly to work with audio files.
 
 **Files**  
 * [myUtils](https://github.com/muhdhuz/useful_scripts/blob/master/myUtils.py): most general modules go in here. e.g. for plotting, timing, directory/file manipulation etc.
-* [resample_wav.py](https://github.com/muhdhuz/useful_scripts/blob/master/resample_wav.py): resamples individual wav files or a foldr containing wav files. 
-* [trim_audio](https://github.com/muhdhuz/useful_scripts/blob/master/trim_audio.py): to trim wav files to a desired length
+* [resample_wav.py](https://github.com/muhdhuz/useful_scripts/blob/master/resample_wav.py): resamples individual wav files or a folder containing wav files. 
+* [trim_audio](https://github.com/muhdhuz/useful_scripts/blob/master/trim_audio.py): trim wav files to a desired length
 
 **Dependencies**  
 * Take a look at the individual files/functions for the dependency required.
