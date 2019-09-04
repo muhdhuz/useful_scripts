@@ -11,18 +11,7 @@ import os
 
 #General use
 #*************************************
-def time_taken(elapsed):
-	"""To format time taken in hh:mm:ss. Use with time.monotic()"""
-	m, s = divmod(elapsed, 60)
-	h, m = divmod(m, 60)
-	return "%d:%02d:%02d" % (h, m, s)
-
-def mydate():
-	"""returns current date and time"""
-	from datetime import datetime
-	return (datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-def plot_signal(result,start=None,figsize=(20,1),grid=False,logy=False,start_min_max=[-1.,1.]):
+def plot_signal(result,start=None,figsize=(20,1),grid=False,logy=False,start_min_max=[-1.,1.],save=False,savename='1'):
 	"""Convenience function to plot signals.
 	start = a float or list of floats containing the value(s) where a vertical line will be plotted
 	"""
@@ -40,7 +29,10 @@ def plot_signal(result,start=None,figsize=(20,1),grid=False,logy=False,start_min
 			ax.vlines(x=start,ymin=start_min_max[0], ymax=start_min_max[1], color='r')
 	if grid:
 		plt.grid()
-	plt.show()
+	if save:
+		fig.savefig(savename + '.png', format='png', bbox_inches = 'tight')
+	else:
+		plt.show()
 
 def save_obj(obj, dir, name):
 	"""to save an obj using pickle"""
@@ -59,13 +51,57 @@ def chunker(seq, size):
 	can be used in a loop -
 	A = 'ABCDEFG'
 	for group in chunker(A, 2):
-    	print(group)
+		print(group)
 	-> 'AB' 'CD' 'EF' 'G'"""
 	return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
 def findMinMax(input):
 	"""return min and max of input array"""
 	return np.amin(input),np.amax(input)
+
+def config_parser(config_file,namespace=False):
+	"""parse a json file into python with namespace variables"""
+	import json
+	try:
+		from types import SimpleNamespace as Namespace
+	except ImportError:
+		from argparse import Namespace  # Python 2.x fallback
+	
+	with open(config_file) as f:
+		if namespace:
+			var = json.load(f, object_hook=lambda d: Namespace(**d))
+		else:
+			var = json.load(f)
+	return var
+
+
+#timing
+#*************************************
+class Timer:
+	"""class to find elapsed time"""
+	def __init__(self):
+		from datetime import datetime
+        self.cache = datetime.now()
+
+    def check(self):
+        now = datetime.now()
+        duration = now - self.cache
+        self.cache = now
+        return duration.total_seconds()
+
+    def reset(self):
+        self.cache = datetime.now()
+
+def time_taken(elapsed):
+	"""To format time taken in hh:mm:ss. Use with time.monotic() or Timer class"""
+	m, s = divmod(elapsed, 60)
+	h, m = divmod(m, 60)
+	return "%d:%02d:%02d" % (h, m, s)
+
+def mydate():
+	"""returns current date and time"""
+	from datetime import datetime
+	return (datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 
 #file/folder manipulation
