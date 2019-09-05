@@ -11,10 +11,13 @@ import os
 
 #General use
 #*************************************
-def plot_signal(result,start=None,figsize=(20,1),grid=False,logy=False,start_min_max=[-1.,1.],save=False,savename='1'):
+def plot_signal(result,start=None,figsize=(20,1),grid=False,logy=False,start_min_max=[-1.,1.],save=False,savename='1',ssh=True):
 	"""Convenience function to plot signals.
 	start = a float or list of floats containing the value(s) where a vertical line will be plotted
 	"""
+	if ssh:
+		import matplotlib
+		matplotlib.use('Agg') 
 	import matplotlib.pylab as plt
 	fig, ax = plt.subplots(figsize=figsize)
 	if logy:
